@@ -1,0 +1,54 @@
+
+.linea-blanca{
+    height: 5px;
+    background-color: #708090;
+}
+
+.titulo{
+    font-family: Michroma;
+    font-size: 12vh;
+    color: #FFFFFF;
+}
+
+.titulo-tabla{
+    font-family: Cabin;
+    font-size: 2.8vh;
+    color: #708090;
+
+}
+.precio{
+    /*
+    font-family: Michroma;
+    */
+    /*text-align: center;*/
+    font-family: Cabin;
+    
+    color:#194776;
+    font-size: 5vh;
+}
+
+.producto{
+    font-family: Cabin;
+    font-size: 5vh;
+
+}
+
+.texto{
+    font-family: Cabin;
+}
+@font-face {
+    font-family: "Michroma";
+    src: url("Michroma-Regular.ttf") format('truetype');
+    font-style: normal;
+    font-weight: normal;
+  }
+
+  @font-face {
+    font-family: "Cabin";
+    src: url("Cabin-VariableFont_wdth\,wght.ttf") format('truetype');
+    font-style: normal;
+    font-weight: normal;
+  }
+
+
+

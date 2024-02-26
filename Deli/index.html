@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/animate.css">
+    <script type="text/javascript" src="js/cordova.webos.js"></script>
+    <script type="text/javascript" src="js/storage.js"></script>
+    <script type="text/javascript" src="js/configuration.js"></script>
+    <script src="listaVideos.js"></script>
+    <style>
+        @font-face{
+            font-family: "Precios";
+            font-stretch: expanded;
+            src: url("css/fuentes/MyriadPro-Bold.otf");
+        }
+
+        @font-face{
+            font-family: "Articulos";
+            font-stretch: expanded;
+            src: url("css/fuentes/MyriadPro-BoldCond.otf");
+        }
+        .articulos{
+            font-family: "Articulos";
+        }
+        .precios{
+            font-family: "Precios";
+        }
+        #vid1 {
+            width: 100%;
+            height: 100%; /* Haz que el video ocupe el 100% de la altura del contenedor */
+            object-fit: fill; /* Ajusta el tamaño del video para cubrir el contenedor */
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+
+        }
+        #vid2 {
+            width: 100%;
+            height: 100%; /* Haz que el video ocupe el 100% de la altura del contenedor */
+            object-fit: fill; /* Ajusta el tamaño del video para cubrir el contenedor */
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+    </style>
+    <title>Alimentos Prepaprados</title>
+</head>
+<body style="overflow: hidden;">
+    <div id="app">
+        <div class="container-fluid" style="height: 100vh;width:100vw;margin: 0;padding: 0;">
+            <div class="row" tyle="height: 100vh;width:100vw;margin: 0;padding: 0;">
+                <div class="col-4">
+                    <div class="row" style="height: 30vh;">
+                        <img src="assets/img/titulo.jpg" style="height: 30vh; width: 100%;padding:0" alt="">
+                    </div>
+                    <div class="row" style="height: 70vh; background-color: #E6E6DC;" v-if="cargado">
+                        <div class="col-12">
+                            <div class="row" :style="'border-top: black 1px solid;height: '+70/listaPrecio0.hojas[index0].length +'vh'" v-if="listaPrecio0 != {}" v-for="preciosColumna in listaPrecio0.hojas[index0]" >
+                                <div class="col-5 d-flex align-content-center justify-content-end">
+                                    <h1 class="my-auto text-lg-end precios" style="font-size: 6.5vh;">
+                                        {{'$'+preciosColumna.precio}}
+                                    </h1>
+                                    <div class="my-auto mx-1 text-lg-end">
+                                        <h1 class="precios">
+                                            {{'.'+preciosColumna.centavos}}
+                                        </h1>
+                                    </div>
+                                </div>
+                                <div class="col-7 d-flex align-content-end">
+                                    <h1 class="my-auto mx-1 articulos" :style="'font-size: '+(preciosColumna.producto.length > 22 ? (preciosColumna.producto.length > 40? 3.6:3.6) : 3.8)+'vh;'">
+                                        {{preciosColumna.producto}}
+                                    </h1>
+    
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="col-8">
+                    <div style=" position: relative;
+                    width: 100%;
+                    height: 70vh;
+                    overflow: hidden; ">
+                            <video id="vid1" ref="vid1"></video>
+                            <video id="vid2" ref="vid2"></video>
+                        
+                    </div>
+                    <div class="row" style="height: 30vh;" v-if="cargado">
+                        <div class="col-3 p-0">
+                            <img src="0.jpg" style="height: 30vh; width: 100%;" alt="">
+                        </div>
+                        <div class="col-3 p-0">
+                            <img src="1.jpg" style="height: 30vh; width: 100%;" alt="">
+                        </div>
+                        <div class="col-3 p-0">
+                            <img src="2.jpg" style="height: 30vh; width: 100%;" alt="">
+                        </div>
+                        <div class="col-3 p-0">
+                            <img src="3.jpg" style="height: 30vh; width: 100%;" alt="">
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/vue.js"></script>
+    <!--
+    <script src="js/axios.js"></script>
+    -->
+    <script>
+        const app = new Vue({
+        el: "#app",
+        data: {
+            index0:0,
+            index1:0,
+            listaPrecio0:{},
+            index0: 0,
+            index1:0,
+            listaPrecio1:[],
+            producto1:{},
+            cargado: false,
+            listaVideos: listaVideos,
+            storage: new this.Storage()
+        },
+        methods:{
+            leerDatosTabla: function() {
+                var localList;
+                var vue = this;
+                this.storage.readFile(function(data){
+				try {
+                    console.log('DATA',data.data);
+                        this.localList = JSON.parse(data.data);
+                        console.log('json STORAGE',this.localList)
+
+                        vue.listaPrecio0 = this.localList.catalogos[0];
+                        vue.listaPrecio1 = this.localList.catalogos[1];
+                        vue.cargado = true;
+                    } catch (error) {
+                        console.log('ERROR DE TRY',error);
+                        $.ajax({
+                            url: "http://127.0.0.1:9080/unzip/lista.json"
+                        })
+                        .fail(function (err) {
+                            console.log(err)
+                            return true;
+                        })
+                        .done(function (data) {
+                            console.log('json AJAX',data)
+                            vue.listaPrecio0 = data.catalogos[0];
+                            vue.listaPrecio1 = data.catalogos[1];
+                            console.log(vue.listaPrecio1.hojas)
+                            vue.cargado = true;
+                            return true;
+                        });
+                        
+                    }
+			    },function(rej){
+                    console.log('ERROR DE LA LIBRERIA',rej);
+                    $.ajax({
+                            url: "http://127.0.0.1:9080/unzip/lista.json"
+                        })
+                        .fail(function (err) {
+                            console.log(err)
+                            return true;
+                        })
+                        .done(function (data) {
+                            console.log('json AJAX',data)
+                            vue.listaPrecio0 = data.catalogos[0];
+                            vue.listaPrecio1 = data.catalogos[1];
+                            console.log(vue.listaPrecio1.hojas)
+                            vue.cargado = true;
+                            return true;
+                        });
+                },{
+                    path:"file://internal/unzip/lista.json"
+                });
+
+            },
+            incrementoLista0: function(){
+                if(this.listaPrecio0.hojas.length-1 == this.index0){
+                    this.index0 = 0;
+                }else{
+                    this.index0++;
+                }
+            },
+            incrementoLista1: function(){
+                if(this.listaPrecio1.hojas.length-1 == this.index1){
+                    this.index1 = 0;
+                }else{
+                    this.index1++;
+                }
+            },
+            cambioDeIndex: function(){
+                var vue = this;
+                setInterval(function(){
+                    //Incrementar Lista0
+                    vue.incrementoLista0();
+                    //Incrementar Lista1
+                    vue.incrementoLista1();
+                },10000);
+            },
+            activarVid: function(){
+                var VIDEO_FILES = this.listaVideos;
+                var CURRENT_PLAYING = 0;
+                var vid1, vid2;
+                init();
+                function updatePlayingIndex() {
+                    CURRENT_PLAYING = (CURRENT_PLAYING + 1) % VIDEO_FILES.length;
+                    //console.log('update:' + CURRENT_PLAYING);
+                }
+                function init() {
+                    vid1 = document.getElementById('vid1');
+                    vid2 = document.getElementById('vid2');
+
+                    vid1.addEventListener('ended', function() {
+                        vid2.play();
+                        vid2.muted = false;
+                    });
+
+                    vid2.addEventListener('ended', function() {
+                        vid1.play();
+                        vid1.muted = false;
+                    });
+
+                    vid1.addEventListener('play', function() {
+                        vid1.style.visibility = 'visible';
+                        vid2.style.visibility = 'hidden';
+                        vid2.muted = true;
+
+                        updatePlayingIndex();
+                        vid2.src = VIDEO_FILES[CURRENT_PLAYING];
+                        vid2.load();
+                    });
+
+                    vid2.addEventListener('play', function() {
+                        vid2.style.visibility = 'visible';
+                        vid1.style.visibility = 'hidden';
+                        vid1.muted = true;
+
+                        updatePlayingIndex();
+                        vid1.src = VIDEO_FILES[CURRENT_PLAYING];
+                        vid1.load();
+                    });
+
+                    vid1.src = VIDEO_FILES[CURRENT_PLAYING];
+                    vid1.load();
+                    vid1.play();
+                }
+            }
+        },
+        mounted: function(){
+            console.log("entro a vue");
+            this.$nextTick(
+                this.activarVid()
+            );
+            var vue  = this;
+            this.leerDatosTabla();
+            this.cambioDeIndex();
+            
+        }
+    });
+    </script>
+
+
+
+</body>
+</html>

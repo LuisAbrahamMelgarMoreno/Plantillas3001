@@ -1,0 +1,228 @@
+@font-face {
+    font-family: "Michroma";
+    src: url("Michroma-Regular.ttf") format('truetype');
+    font-style: normal;
+    font-weight: normal;
+  }
+
+  @font-face {
+    font-family: "Cabin";
+    src: url("Cabin-VariableFont_wdth\,wght.ttf") format('truetype');
+    font-style: normal;
+    font-weight: normal;
+  }
+
+  @font-face {
+    font-family: "Rubik";
+    src: url("Rubik-VariableFont_wght.ttf") format('truetype');
+    font-style: normal;
+    font-weight: normal;
+  }
+
+  @font-face {
+    font-family: "MotoSerif";
+    src: url("NotoSerif-Bold.ttf") format('truetype');
+    font-style: normal;
+    font-weight: normal;
+  }
+
+  @font-face {
+    font-family: "Yanone";
+    src: url("YanoneKaffeesatz-VariableFont_wght.ttf") format('truetype');
+    font-style: normal;
+    font-weight: normal;
+  }
+
+h1{
+    font-family: 'Yanone';
+    font-size: calc(1em + 1.5vw + 0.2vh - 0.2vmin);
+}
+
+.texto-especial{
+    font-family: 'Cabin';
+    font-size: 350%;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+.texto-especial-producto{
+    
+}
+
+.texto-especial-precio{
+    font-size: 200%;
+    font-family: 'Cabin';
+
+}
+
+.texto-especial-centavo{
+    float: right; 
+    margin-top: 8%;
+    font-family: 'Cabin';
+
+}
+
+
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100vh;
+}
+
+#container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+#col1 {
+    width: 35%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: #d0d0d0;
+}
+
+#col1f1 {
+    height: 30%;
+    background-image: url('../logo.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.col1f2 {
+    height: 70%;
+    width: 100%;
+}
+
+    .table {
+    height: 100%;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .table th,
+    .table td {
+    padding: 10px;
+    text-align: center;
+}
+
+.table tbody {
+    vertical-align: middle;
+}
+
+td {
+    background-color: #d0d0d0;
+    padding: 5px;
+
+    /*font-size: 300%;*/
+}
+td p{
+    font-size: 150%;
+    font-family: 'Cabin';
+}
+
+
+
+tr:nth-child(2n) td {
+    background-color: #f7f7f7;
+}
+
+tr {
+    background-color: #ebebeb;
+}
+
+.table tbody tr {
+    height: 20%;
+}
+
+#col2 {
+    width: 65%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    /*background-color: #20639B;*/
+}
+
+#col2f1 {
+    height: 65%;
+    background-color: #f7f7f7;
+    position: relative;
+}
+
+#col2f1 video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#col2f2{
+    height: 35%;
+    display: flex;
+}
+#col2f2col1{
+    width: 40%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-image: url('../precio.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+#col2f2col1 h2{
+    font-size: 4rem;
+    padding: 0px!important;
+    margin: 0px!important;
+}
+
+
+
+#col2f2col2{
+    width: 60%;
+}
+#col2f2col2 img{
+    width: 100%;
+    height: 100%;
+}
+
+/*fuente*/
+.table td, h2{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+@media (max-width: 100%) {
+    #container {
+        flex-direction: column;
+        height: auto;
+    }
+
+    #col1 {
+        width: 100%;
+        height: auto;
+    }
+
+    #col2 {
+        width: 100%;
+        height: auto;
+    }
+
+    #col1f1 {
+        height: 300px;
+        background-size: auto 100%;
+    }
+
+    #col2f1 video {
+        max-width: 100%;
+        height: auto;
+    }
+}

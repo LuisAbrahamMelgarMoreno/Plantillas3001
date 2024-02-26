@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/estilos.css">
+    <!--FIN DE LIBRERIAS LG-->
+    <title>Bocadillos</title>
+    <script src="listaVideos.js"></script>
+    <script type="text/javascript" src="js/cordova.webos.js"></script>
+    <script type="text/javascript" src="js/storage.js"></script>
+    <script type="text/javascript" src="js/configuration.js"></script>
+    <style>
+        #vid1 {
+            width: 100%;
+            height: 100%; /* Haz que el video ocupe el 100% de la altura del contenedor */
+            object-fit: fill; /* Ajusta el tamaño del video para cubrir el contenedor */
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+
+        }
+        #vid2 {
+            width: 100%;
+            height: 100%; /* Haz que el video ocupe el 100% de la altura del contenedor */
+            object-fit: fill; /* Ajusta el tamaño del video para cubrir el contenedor */
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body style="height: 100vh;width: 100%; overflow: hidden;">
+    <div id="app" style="background-color: #e9e3cd;">
+        <div class="container-fluid">
+            <div class="row" style="height: 20vh; background-color: #194776;">
+                <div class="col-12">
+                    <p class="titulo text-center" v-text="titulo"></p>
+                </div>
+            </div>
+            <div class="row" style="height: 80vh;">
+                <div class="col-4" style="padding: 0%;">
+                    <div style=" position: relative;
+                    width: 100%;
+                    height: 80vh;
+                    overflow: hidden; ">
+                            <video id="vid1"></video>
+                            <video id="vid2"></video>
+                        
+                    </div>
+                </div>
+                <div class="col-8"  v-if="cargado">
+                    <div class="container m-5" style="height: 5vh; width: 93%;">
+                        <!--TITULO TABLA-->
+                        <div class="row" >
+                            <div class="container" style="width: 60%;">
+
+                            </div>
+                            <div class="container" :style="'width:'+ 40/datos.columnas.length+'%;'" v-for="c in datos.columnas">
+                                <p class="titulo-tabla text-center" v-text="c"></p>
+                            </div>
+                        </div>
+                        <div class="row" :style="'height:'+ 60/datos.hojas[index].length+'vh;'" v-for="(fila,indiceFila) in datos.hojas[index]">
+                            <hr class="linea-blanca">
+                            <div class="container" style="width: 60%;">
+                                <p class="producto" v-text="fila.producto"></p>
+                            </div>
+                            <div class="container d-flex justify-content-center" :style="'width:'+ 40/datos.columnas.length+'%;'" v-for="precio in fila.precios">
+                                <b class="precio text-center" v-if="precio.precio > 0" v-text="'$'+precio.precio"></b>
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/jquery.min.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <!--
+    <script src="js/axios.js"></script>
+    -->
+
+    <script>
+        const app = new Vue({
+        el: "#app",
+        data: {
+            index:0,
+            limite:1,
+            titulo:"Bocadillos",
+            cargado:false,
+            datos:{},
+            listaVideos: listaVideos,
+            storage: new this.Storage()
+           
+        },
+        methods:{
+        leerDatosTabla: function() {
+                var vue = this;
+                /*$.ajax({
+                    //url: "http://127.0.0.1:5500/listaColumna.json"
+                    
+                    url: "http://127.0.0.1:9080/unzip/listaColumna.json"
+                })
+                .fail(function (err) {
+                    console.log(err)
+                    return true;
+                })
+                .done(function (data) {
+                    console.log('json data return',data)
+                    //vue.listaPrecio0 = data.catalogos[0];
+                    //vue.listaPrecio1 = data.catalogos[1];
+                    vue.cargado = true;
+                    vue.datos = data.catalogos[0];
+                    vue.titulo = vue.datos.nombre;
+                    console.log(vue.datos);
+                    var contador = vue.datos.hojas.length;
+                    contador--;
+                    vue.index = 0;
+                    setInterval(function(){
+                        if(vue.index === contador){
+                            vue.index = 0;
+                        }else{
+                            vue.index++;
+                        }
+                        //console.log(vue.index,contador);
+                    },10000);
+                    return true;
+                });*/
+
+                this.storage.readFile(function(data){
+				try {
+                    console.log('DATA',data.data);
+                    console.log('json data return',JSON.parse(data.data))
+                        var a = JSON.parse(data.data);
+                        vue.cargado = true;
+                        vue.datos = a.catalogos[0];
+                        vue.titulo = vue.datos.nombre;
+                        console.log(vue.datos);
+                        var contador = vue.datos.hojas.length;
+                        contador--;
+                        vue.index = 0;
+                        setInterval(function(){
+                            if(vue.index === contador){
+                                vue.index = 0;
+                            }else{
+                                vue.index++;
+                            }
+                            //console.log(vue.index,contador);
+                        },10000);
+                        return true;
+                    } catch (error) {
+                        console.log('ERROR DE TRY',error);
+                        $.ajax({
+                    //url: "http://127.0.0.1:5500/listaColumna.json"
+                    
+                            url: "http://127.0.0.1:9080/unzip/listaColumna.json"
+                        })
+                        .fail(function (err) {
+                            console.log(err)
+                            return true;
+                        })
+                        .done(function (data) {
+                            console.log('json data return',data)
+                            //vue.listaPrecio0 = data.catalogos[0];
+                            //vue.listaPrecio1 = data.catalogos[1];
+                            vue.cargado = true;
+                            vue.datos = data.catalogos[0];
+                            vue.titulo = vue.datos.nombre;
+                            console.log(vue.datos);
+                            var contador = vue.datos.hojas.length;
+                            contador--;
+                            vue.index = 0;
+                            setInterval(function(){
+                                if(vue.index === contador){
+                                    vue.index = 0;
+                                }else{
+                                    vue.index++;
+                                }
+                                //console.log(vue.index,contador);
+                            },10000);
+                            return true;
+                        });
+                        
+                    }
+			    },function(rej){
+                    console.log('ERROR DE LA LIBRERIA',rej);
+                    $.ajax({
+                    //url: "http://127.0.0.1:5500/listaColumna.json"
+                    
+                        url: "http://127.0.0.1:9080/unzip/listaColumna.json"
+                    })
+                    .fail(function (err) {
+                        console.log(err)
+                        return true;
+                    })
+                    .done(function (data) {
+                        console.log('json data return',data)
+                        //vue.listaPrecio0 = data.catalogos[0];
+                        //vue.listaPrecio1 = data.catalogos[1];
+                        vue.cargado = true;
+                        vue.datos = data.catalogos[0];
+                        vue.titulo = vue.datos.nombre;
+                        console.log(vue.datos);
+                        var contador = vue.datos.hojas.length;
+                        contador--;
+                        vue.index = 0;
+                        setInterval(function(){
+                            if(vue.index === contador){
+                                vue.index = 0;
+                            }else{
+                                vue.index++;
+                            }
+                            //console.log(vue.index,contador);
+                        },10000);
+                        return true;
+                    });
+                },{
+                    path:"file://internal/unzip/listaColumna.json"
+                });
+
+            },
+            
+            activarVid: function(){
+                var VIDEO_FILES = this.listaVideos;
+                var CURRENT_PLAYING = 0;
+                var vid1, vid2;
+                console.log('videos')
+                init();
+                function updatePlayingIndex() {
+                    CURRENT_PLAYING = (CURRENT_PLAYING + 1) % VIDEO_FILES.length;
+                    //console.log('update:' + CURRENT_PLAYING);
+                }
+                function init() {
+                    vid1 = document.getElementById('vid1');
+                    vid2 = document.getElementById('vid2');
+                    console.log(vid1,vid2);
+                    vid1.addEventListener('ended', function() {
+                        vid2.play();
+                        vid2.muted = false;
+                    });
+
+                    vid2.addEventListener('ended', function() {
+                        vid1.play();
+                        vid1.muted = false;
+                    });
+
+                    vid1.addEventListener('play', function() {
+                        vid1.style.visibility = 'visible';
+                        vid2.style.visibility = 'hidden';
+                        vid2.muted = true;
+
+                        updatePlayingIndex();
+                        vid2.src = VIDEO_FILES[CURRENT_PLAYING];
+                        vid2.load();
+                    });
+
+                    vid2.addEventListener('play', function() {
+                        vid2.style.visibility = 'visible';
+                        vid1.style.visibility = 'hidden';
+                        vid1.muted = true;
+
+                        updatePlayingIndex();
+                        vid1.src = VIDEO_FILES[CURRENT_PLAYING];
+                        vid1.load();
+                    });
+
+                    vid1.src = VIDEO_FILES[CURRENT_PLAYING];
+                    vid1.load();
+                    vid1.play();
+                }
+            }
+        
+        },
+        mounted:function(){
+            console.log("entro a vue");
+            this.$nextTick(
+                this.activarVid()
+            );
+            var vue  = this;
+            this.leerDatosTabla();
+        }
+        });
+    </script>
+
+
+
+</body>
+</html>

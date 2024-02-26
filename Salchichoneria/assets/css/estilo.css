@@ -1,0 +1,21 @@
+body {
+    height: 1080px;
+    width: 1920px;
+    max-width: 1920px;
+    max-height: 1080px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+.txt-left-banner {
+    font-size: 4rem !important;
+}
+
+.py-3 {
+    padding-top: 1.4rem !important;
+    padding-bottom: 1.4rem !important;
+}
+
+.cover {
+    object-fit: cover;
+}

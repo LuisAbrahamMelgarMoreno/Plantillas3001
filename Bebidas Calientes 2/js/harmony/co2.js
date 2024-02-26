@@ -1,0 +1,16 @@
+/*
+* ============================================================================
+*   
+*   ID SW DEVELOPMENT , LG ELECTRONICS INC., PYEONGTAEK, KOREA
+*   Copyright(c) 2019 by LG Electronics Inc.. All rights reserved.
+*   
+*   Harmony API, for handling external device on webOS Signage platform
+*   
+*   Author          : signagesupport@lge.com
+*   Homepage        : http://webossignage.developer.lge.com
+*   Modified Date   : 2019-05-21
+*   Release Version : 1.41.2019-05-21
+*   
+* ============================================================================
+*/
+"use strict";var CO2=function(){function e(){if(!window.PalmServiceBridge)throw": This platform is not webOS Signage."}var n,o,a,i={HARMONY_0000:"This external device is not supported on current platform (or firmware).",CO2_0000:"Unknown event.",CO2_0001:"Unable to get status.",CO2_0100:"Unknown event.",CO2_0101:"Unable to get value.",CO2_0102:"Event handler is already set. Before set event handler, please remove current event handler.",CO2_0103:"Callback as used for parameter is not a function.",CO2_0200:"CO2 event handler is not registered yet."};function u(e,r){e&&"function"==typeof e&&(r.returnValue&&delete r.returnValue,r.subscribed&&delete r.subscribed,e(r))}function l(e,r,t){e&&"function"==typeof e&&(void 0===i[r]?e({errorCode:"UNKNOWN_ERROR",errorText:"Unknown error."}):"string"==typeof errorText?e({errorCode:r,errorText:i[r]+": "+t}):e({errorCode:r,errorText:i[r]}))}function c(e){return!(-1===e.errorCode&&-1<e.errorText.indexOf("Unknown method")&&-1<e.errorText.indexOf("for category"))}return e.prototype.setEventHandler=function(e,r){if(n&&"undefined"!=n)l(a,"CO2_0102");else{if("function"==typeof e&&"function"==typeof r){o=e,a=r;var t="luna://com.webos.service.externaldevice/co2/getData";return(n=new PalmServiceBridge).url=t,n.onservicecallback=function(e){if("string"==typeof e){var r=JSON.parse(e);if(!1!==c(r))return!0===r.returnValue?void u(o,{currentValue:r.currentValue,lowestValue:r.lowestValue,highestValue:r.highestValue}):void l(a,"CO2_0101");l(a,"HARMONY_0000")}else l(a,"CO2_0100")},n.call(t,'{"subscribe":true}')}l(r,"CO2_0103")}},e.prototype.removeEventHandler=function(e,r){return n&&"undefined"!=n?(n.cancel(),n=null,void u(e)):void l(r,"CO2_0200")},e.prototype.getValue=function(t,n){var e=new PalmServiceBridge,r="luna://com.webos.service.externaldevice/co2/getData";return e.url=r,e.onservicecallback=function(e){if("string"==typeof e){var r=JSON.parse(e);if(!1!==c(r))return!0===r.returnValue?void u(t,{currentValue:r.currentValue,lowestValue:r.lowestValue,highestValue:r.highestValue}):void l(n,"CO2_0101");l(n,"HARMONY_0000")}else l(n,"CO2_0100")},e.call(r,"{}")},e.prototype.getStatus=function(t,n){var e=new PalmServiceBridge,r="luna://com.webos.service.externaldevice/co2/getStatus";return e.url=r,e.onservicecallback=function(e){if("string"==typeof e){var r=JSON.parse(e);if(!1!==c(r))return!0===r.returnValue?void u(t,{attached:r.attached}):void l(n,"CO2_0001");l(n,"HARMONY_0000")}else l(n,"CO2_0000")},e.call(r,"{}")},e}();
